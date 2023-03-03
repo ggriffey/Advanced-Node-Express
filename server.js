@@ -6,6 +6,8 @@ const fccTesting = require("./freeCodeCamp/fcctesting.js");
 const passport = require("passport");
 const session = require("express-session");
 const { ObjectID } = require("mongodb");
+const LocalStrategy = require("passport-local");
+const Strategy = require("passport-github");
 
 const app = express();
 
@@ -50,6 +52,18 @@ myDB(async (client) => {
       done(null, doc);
     });
   });
+
+  passport.use(
+    new LocalStrategy((username, password, done) => {
+      myDataBase.findOne({ username: username }, (err, user) => {
+        console.log(`User ${username} attempted to log in.`);
+        if (err) return done(err);
+        if (!user) return done(null, false);
+        if (password !== user.password) return done(null, false);
+        return done(null, user);
+      });
+    })
+  );
 
   // Be sure to add this...
 }).catch((e) => {
