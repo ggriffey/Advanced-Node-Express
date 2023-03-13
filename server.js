@@ -43,6 +43,15 @@ myDB(async (client) => {
     });
   });
 
+  app
+    .route("/login")
+    .post(
+      passport.authenticate("local", { failureRedirect: "/" }),
+      (req, res) => {
+        res.render("login");
+      }
+    );
+
   // Serialization and deserialization here...
   passport.serializeUser((user, done) => {
     done(null, user._id);
@@ -69,7 +78,10 @@ myDB(async (client) => {
   // Be sure to add this...
 }).catch((e) => {
   app.route("/").get((req, res) => {
-    res.render("index", { title: e, message: "Unable to connect to database" });
+    res.render("index", {
+      title: e,
+      message: "Unable to connect to database",
+    });
   });
 });
 
