@@ -39,6 +39,7 @@ myDB(async (client) => {
     res.render("index", {
       title: "Connected to Database",
       message: "Please login",
+      showLogin: true,
     });
   });
 
